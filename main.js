@@ -41,8 +41,8 @@ features such as alerts. This list will be marketed to.
 
 ::Affiliate links::
 Suggest transportation and accommodations based on itinerary with 
-affiliate links can be shown within the app.
-
+affiliate links shown within the app.
+====End Description====
 
 ====Pseudo code====
 ----Screens---- 
@@ -59,7 +59,7 @@ register new user screen {
     email input field
     username input field
     password input field
-    register now button
+    register_now_button
     cancel_button
 }
 
@@ -87,7 +87,7 @@ password recovery screen {
     send_password_button
 }
 
-logged in screen {
+user logged in screen {
     welcome user
     create_new_button
     find_existing_button
@@ -225,3 +225,44 @@ return_button {
 
 /*====Real Code ===*/
 
+console.log('node running main.js');
+
+/* Module dependencies */
+
+var express = require('express'),
+    jade = require('jade');
+    stylus = require('stylus');
+    nib = require('nib');
+    passport = require('passport');
+
+var app = express();
+
+function compile(str, path) {
+    return stylus(str) .set('filename', path) .use(nib());
+}
+
+app.set('view engine', 'jade');
+app.use(stylus.middleware({
+    src: __dirname + '/public',
+    compile: compile
+}));
+app.use(express.static(__dirname + '/public'));
+app.get('/', function(req, res){
+    res.render('index', {title: 'Home'});
+})
+app.get('/login', function(req, res){
+    res.render('login', {title: 'Login'});
+})
+app.get('/register', function(req, res){
+    res.render('register', {title: 'Register'});
+})
+app.get('/forgot', function(req, res){
+    res.render('forgot', {title: 'Forgot'});
+})
+app.get('/user', function(req, res){
+    res.render('user', {title: 'User'});
+})
+app.listen(3000);
+
+app.post('/login', passport.authenticate('local', { successRedirect: '/',
+                                                    failureRedirect: '/login' }));
